@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random User Info</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #userInfo {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <h1>Random User Info</h1>
+    <button id="fetchUserButton">Fetch Random User</button>
+    <div id="userInfo"></div>
+  </div>
+
+  <script>
+    const fetchUserButton = document.getElementById('fetchUserButton');
+    const userInfoDiv = document.getElementById('userInfo');
+
+    fetchUserButton.addEventListener('click', () => {
+      // Define the URL of the random user API endpoint
+      const endpoint = "https://randomuser.me/api/";
+
+      // Fetch data from the random user API endpoint using Fetch API
+      fetch(endpoint)
+        .then(response => {
+          // Check if the response is successful (status code 200)
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          // Parse the JSON response
+          return response.json();
+        })
+        .then(data => {
+          // Extract user information from the response
+          const user = data.results[0];
+          const name = `${user.name.first} ${user.name.last}`;
+          const email = user.email;
+          const picture = user.picture.medium;
+
+          // Display user information on the webpage
+          userInfoDiv.innerHTML = `
+            <p>Name: ${name}</p>
+            <p>Email: ${email}</p>
+            <img src="${picture}" alt="User Picture">
+          `;
+        })
+        .catch(error => {
+          // Handle any errors that occur during the fetch operation
+          console.error('There was a problem with the fetch operation:', error);
+        });
+    });
+  </script>
+</body>
+</html>
